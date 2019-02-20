@@ -1,0 +1,75 @@
+Assignment-1_Session-7
+
+Problem Statement:
+
+1. Use the given link Data Set.
+
+Answer the below questions:
+
+a. Find the top 5 attributes having highest correlation (select only Numeric Features).
+Answer-
+crime <- read.csv("crime_data_w_population_and_crime_rate.csv", T, ",")
+head(crime)
+str(crime)
+summary(crime)
+table(is.na(crime))
+
+crime1 <- crime[,-1]
+head(crime1)
+
+cor_crime1 <- cor(crime1)
+max_cor_crime1 <- setDT(melt(cor_crime1))[Var1 != Var2, .SD[which.max(value)], keyby=Var1]
+max_cor_crime1[order(value, decreasing = T)[1:10],]
+
+# CPOPARST~CPOPCRIM, population~CPOPCRIM, IDNO~FIPS_ST, MODINDX~LARCENY, INDEX  AGASSLT.
+# These 5 attributes have the highest correlation amongst them.
+
+b. Find out top 3 reasons for having more crime in a city.
+Answer-
+# By checking the correlation of other columns with the crime_rate, we can check for the reasons for the more crime.
+
+cor_crime_rate <- cor_crime1[,1]
+cor_crime_rate
+cor_crime_rate1 <- as.data.frame(cor_crime_rate)
+cor_crime_rate[order(cor_crime_rate, decreasing = T)]
+
+# Result
+crime_rate_per_100000               AGASSLT                 INDEX                  RAPE 
+           1.00000000            0.37082943            0.33900287            0.33550569 
+              BURGLRY                MURDER               MODINDX               LARCENY 
+           0.32328061            0.32289797            0.30033074            0.29579012 
+              ROBBERY                 ARSON               MVTHEFT              CPOPCRIM 
+           0.27814067            0.27064889            0.24393770            0.22782538 
+             CPOPARST            population              AG_ARRST                AG_OFF 
+           0.22663879            0.22468976            0.21689062            0.20500743 
+               COVIND              FIPS_CTY               FIPS_ST                  IDNO 
+           0.04927086            0.03708328           -0.10437078           -0.10512174 
+                index               EDITION                  PART 
+          -0.88806979                    NA                    NA 
+
+
+# From the correlation we can state that RAPE, BURGLRY and MURDER are the 3 main reason for having more crime.
+
+
+c. Which all attributes have correlation with crime rate?
+Answer-
+# Creating correlation of crime_rate_per_100000 with all the other columns
+cor_crime_rate <- cor_crime1[,1]
+cor_crime_rate
+
+# Result
+
+crime_rate_per_100000               AGASSLT                 INDEX                  RAPE 
+           1.00000000            0.37082943            0.33900287            0.33550569 
+              BURGLRY                MURDER               MODINDX               LARCENY 
+           0.32328061            0.32289797            0.30033074            0.29579012 
+              ROBBERY                 ARSON               MVTHEFT              CPOPCRIM 
+           0.27814067            0.27064889            0.24393770            0.22782538 
+             CPOPARST            population              AG_ARRST                AG_OFF 
+           0.22663879            0.22468976            0.21689062            0.20500743 
+               COVIND              FIPS_CTY               FIPS_ST                  IDNO 
+           0.04927086            0.03708328           -0.10437078           -0.10512174 
+                index               EDITION                  PART 
+          -0.88806979                    NA                    NA 
+
+# By looking at the result each column except EDITION and PART have correlation with the crime rate.
